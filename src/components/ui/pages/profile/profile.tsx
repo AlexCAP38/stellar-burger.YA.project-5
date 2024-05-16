@@ -6,15 +6,23 @@ import commonStyles from '../common.module.css';
 
 import { ProfileUIProps } from './type';
 import { ProfileMenu } from '@components';
+import { useNavigate } from 'react-router-dom';
+import { getUser } from '../../../../services/reducers/user/slice';
+import { useSelector } from '../../../../services/store';
 
-export const ProfileUI: FC<ProfileUIProps> = ({
+export const ProfileUI = ({
   formValue,
   isFormChanged,
   updateUserError,
   handleSubmit,
   handleCancel,
   handleInputChange
-}) => (
+}: ProfileUIProps) => (
+  // const navigate = useNavigate();
+  //111
+  // const { isAuthorization } = useSelector(getUser);
+  // !isAuthorization && navigate('/login');
+
   <main className={`${commonStyles.container}`}>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
       <ProfileMenu />

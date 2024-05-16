@@ -1,3 +1,4 @@
+// Тип ингредиента
 export type TIngredient = {
   _id: string;
   name: string;
@@ -35,6 +36,10 @@ export type TOrdersData = {
 export type TUser = {
   email: string;
   name: string;
+  loading: boolean;
+  isAuthorization: boolean;
+  error: string;
+  orderUser: TOrder[] | [];
 };
 
 export type TTabMode = 'bun' | 'sauce' | 'main';

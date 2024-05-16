@@ -35,8 +35,6 @@ export const refreshToken = (): Promise<TRefreshResponse> =>
       return refreshData;
     });
 
-/* Это предпочтительны способ обновления токена, но допустимы и другие, главное,
-что бы обновление токена работало корректно */
 export const fetchWithRefresh = async <T>(
   url: RequestInfo,
   options: RequestInit
@@ -63,7 +61,7 @@ type TIngredientsResponse = TServerResponse<{
   data: TIngredient[];
 }>;
 
-type TFeedsResponse = TServerResponse<{
+export type TFeedsResponse = TServerResponse<{
   orders: TOrder[];
   total: number;
   totalToday: number;
@@ -73,6 +71,7 @@ type TOrdersResponse = TServerResponse<{
   data: TOrder[];
 }>;
 
+//Получить ингредиенты
 export const getIngredientsApi = () =>
   fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
@@ -81,6 +80,7 @@ export const getIngredientsApi = () =>
       return Promise.reject(data);
     });
 
+//Получить Ленту заказов
 export const getFeedsApi = () =>
   fetch(`${URL}/orders/all`)
     .then((res) => checkResponse<TFeedsResponse>(res))
@@ -89,6 +89,7 @@ export const getFeedsApi = () =>
       return Promise.reject(data);
     });
 
+//получить историю заказов пользователя
 export const getOrdersApi = () =>
   fetchWithRefresh<TFeedsResponse>(`${URL}/orders`, {
     method: 'GET',
@@ -106,6 +107,7 @@ type TNewOrderResponse = TServerResponse<{
   name: string;
 }>;
 
+//Сделать заказ
 export const orderBurgerApi = (data: string[]) =>
   fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
     method: 'POST',
@@ -145,6 +147,7 @@ type TAuthResponse = TServerResponse<{
   user: TUser;
 }>;
 
+//Регистрация пользователя
 export const registerUserApi = (data: TRegisterData) =>
   fetch(`${URL}/auth/register`, {
     method: 'POST',
@@ -164,6 +167,7 @@ export type TLoginData = {
   password: string;
 };
 
+//Авторизация пользователя
 export const loginUserApi = (data: TLoginData) =>
   fetch(`${URL}/auth/login`, {
     method: 'POST',
@@ -208,6 +212,7 @@ export const resetPasswordApi = (data: { password: string; token: string }) =>
 
 type TUserResponse = TServerResponse<{ user: TUser }>;
 
+//получение информации о пользователе
 export const getUserApi = () =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     headers: {
@@ -215,6 +220,7 @@ export const getUserApi = () =>
     } as HeadersInit
   });
 
+//Обновление информации о пользователе
 export const updateUserApi = (user: Partial<TRegisterData>) =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     method: 'PATCH',
@@ -225,6 +231,7 @@ export const updateUserApi = (user: Partial<TRegisterData>) =>
     body: JSON.stringify(user)
   });
 
+//Выход пользователя
 export const logoutApi = () =>
   fetch(`${URL}/auth/logout`, {
     method: 'POST',

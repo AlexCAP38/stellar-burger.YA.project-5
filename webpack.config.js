@@ -48,6 +48,8 @@ module.exports = {
     ]
   },
   plugins: [
+
+    // ВОТ ЭТУ ШЛЯПУ НАДО ОТКЛЮЧАТЬ
     new ESLintPlugin({
       extensions: ['.js', '.jsx', '.ts', '.tsx']
     }),

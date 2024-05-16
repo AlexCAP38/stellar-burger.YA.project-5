@@ -1,5 +1,10 @@
+interface IFeed {
+  total: number;
+  totalToday: number;
+}
+
 export type FeedInfoUIProps = {
-  feed: any;
+  feed: IFeed;
   readyOrders: number[];
   pendingOrders: number[];
 };

@@ -13,6 +13,5 @@ export const ProfileOrders: FC = () => {
   }, []);
 
   const { orderUser: orders } = useSelector(getUser);
-
   return <ProfileOrdersUI orders={orders} />;
 };

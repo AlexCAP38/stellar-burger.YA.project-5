@@ -1,16 +1,25 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TOrder } from '@utils-types';
 import { useSelector } from '../../services/store';
-import { getOrders } from '../../services/reducers/feed/slice';
 import { getIngredients } from '../../services/reducers/ingredients/slice';
 import { useParams } from 'react-router-dom';
+import { getOrderByNumberApi } from '@api';
 
 export const OrderInfo: FC = () => {
-  const { orders } = useSelector(getOrders);
+  //Определяем первоначальное значение orders
+  const [orders, setOrder] = useState<Array<TOrder>>([]);
+
   const { items: ingredients } = useSelector(getIngredients);
   const { id } = useParams();
+
+  //получили id запросли ордер
+  useEffect(() => {
+    getOrderByNumberApi(Number(id)).then((response) => {
+      setOrder(response.orders);
+    });
+  }, [id]);
 
   /** TODO: взять переменные orderData и ingredients из стора */
   const orderData = orders.find((item) => item.number === Number(id));

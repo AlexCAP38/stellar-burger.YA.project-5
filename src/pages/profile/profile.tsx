@@ -1,5 +1,5 @@
 import { ProfileUI } from '@ui-pages';
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, SyntheticEvent, useState } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
 import { getUser } from '../../services/reducers/user/slice';
 import { fetchUpdateUser } from '../../services/reducers/user/actions/fetchUpdateUser';

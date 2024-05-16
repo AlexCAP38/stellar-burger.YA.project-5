@@ -5,16 +5,16 @@ import { TFeedsResponse } from '../../../utils/burger-api';
 
 type TFeed = {
   orders: TOrder[] | [];
-  total: number | undefined;
-  totalToday: number | undefined;
+  total: number;
+  totalToday: number;
   loading?: boolean;
   error?: string | null;
 };
 
 const initialState: TFeed = {
   orders: [],
-  total: undefined,
-  totalToday: undefined,
+  total: 0,
+  totalToday: 0,
   loading: false,
   error: null
 };

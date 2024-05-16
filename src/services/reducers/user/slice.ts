@@ -35,10 +35,10 @@ export const userSlice = createSlice({
     builder
       //Авторизация пользователя
       .addCase(fetchLoginUser.pending, (state) => {
-        state.loading = true;
+        // state.loading = false;
       })
       .addCase(fetchLoginUser.rejected, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.error = action.error?.message || '';
       })
       .addCase(fetchLoginUser.fulfilled, (state, action) => {
@@ -54,16 +54,16 @@ export const userSlice = createSlice({
           name: action.payload.user.name,
           email: action.payload.user.email,
           isAuthorization: true,
-          loading: false
+          loading: true
         };
       })
 
       //Регистрация пользователя
       .addCase(fetchNewUser.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(fetchNewUser.rejected, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.error = action.error?.message || '';
       })
       .addCase(fetchNewUser.fulfilled, (state, action) => {
@@ -78,8 +78,8 @@ export const userSlice = createSlice({
           ...state,
           name: action.payload.user.name,
           email: action.payload.user.email,
-          isAuthorization: true,
-          loading: false
+          isAuthorization: true
+          // loading: false
         };
       })
 
@@ -105,10 +105,10 @@ export const userSlice = createSlice({
 
       //обновление пользователя
       .addCase(fetchUpdateUser.pending, (state) => {
-        state.loading = true;
+        state.loading = false;
       })
       .addCase(fetchUpdateUser.rejected, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         // state.error = action.error?.message || '';
       })
       .addCase(fetchUpdateUser.fulfilled, (state, action) =>
@@ -123,45 +123,32 @@ export const userSlice = createSlice({
           ...state,
           name: action.payload.user.name,
           email: action.payload.user.email,
-          isAuthorization: true,
-          loading: false
+          isAuthorization: true
+          // loading: false
         })
       )
 
       //получение информации о пользователе
       .addCase(fetchUser.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
-      .addCase(fetchUser.rejected, (state, action) =>
-        // state.loading = false;
-        // state.isAuthorization= false;
-        ({
-          name: '',
-          email: '',
-          // прогресс загрузки
-          loading: false,
-          //пользователь авторизовался
-          isAuthorization: false,
-          error: '',
-          orderUser: []
-        })
-      )
-      .addCase(fetchUser.fulfilled, (state, action) =>
-        //записываем токен в куки
-        // setCookie('accessToken', action.payload.accessToken);
-
-        //записывае рефреш токен в локалсторедж
-        // localStorage.setItem('refreshToken', action.payload.refreshToken);
-
-        //обновляем стор
-        ({
-          ...state,
-          name: action.payload.user.name,
-          email: action.payload.user.email,
-          isAuthorization: true,
-          loading: false
-        })
-      )
+      .addCase(fetchUser.rejected, (state, action) => ({
+        name: '',
+        email: '',
+        // прогресс загрузки
+        loading: true,
+        //пользователь авторизовался
+        isAuthorization: false,
+        error: '',
+        orderUser: []
+      }))
+      .addCase(fetchUser.fulfilled, (state, action) => ({
+        ...state,
+        name: action.payload.user.name,
+        email: action.payload.user.email,
+        isAuthorization: true,
+        loading: true
+      }))
 
       //получение ордеров пользователя
       .addCase(fetchOrderUser.pending, (state) => {

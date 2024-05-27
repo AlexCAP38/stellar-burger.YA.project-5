@@ -10,7 +10,7 @@ import {
 } from './actions';
 import { setCookie, deleteCookie } from '../../../utils/cookie';
 
-const initialState: TUser = {
+export const initialState: TUser = {
   name: '',
   email: '',
   // прогресс загрузки

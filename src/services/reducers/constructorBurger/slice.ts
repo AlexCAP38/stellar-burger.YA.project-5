@@ -16,7 +16,7 @@ interface IConstructor {
   orderModalData: TOrder | null;
 }
 
-const initialState: IConstructor = {
+export const initialState: IConstructor = {
   constructorItems: {
     bun: undefined,
     ingredients: []

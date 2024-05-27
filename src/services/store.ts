@@ -14,7 +14,7 @@ import { userSlice } from './reducers/user/slice';
 import { feedSlice } from './reducers/feed/slice';
 
 //Заполнение корневого редьюсера
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   ingredientsSlice: ingredientsSlice.reducer,
   makeBurgerSlice: makeBurgerSlice.reducer,
   userSlice: userSlice.reducer,
@@ -34,3 +34,4 @@ export const useDispatch: () => AppDispatch = () => dispatchHook();
 export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
 
 export default store;
+console.log(store.getState());

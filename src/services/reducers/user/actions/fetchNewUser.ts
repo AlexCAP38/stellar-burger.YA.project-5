@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { registerUserApi } from '@api';
+import { registerUserApi } from '../../../../utils/burger-api';
 import { TRegisterData } from '../../../../utils/burger-api';
 
 export const fetchNewUser = createAsyncThunk(

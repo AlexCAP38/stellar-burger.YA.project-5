@@ -1,7 +1,8 @@
-import { setCookie } from '../../src/utils/cookie';
+import { setCookie, deleteCookie } from '../../src/utils/cookie';
 
 beforeEach(() => {
     setCookie('accessToken', 'FAKE_Token');
+    localStorage.setItem('refreshToken', 'FAKE_Token');
 
     //перехватывае запрос
     cy.intercept('GET', '*/api/ingredients', { fixture: 'ingredients.json' }).as('getIngredietns');
@@ -16,6 +17,9 @@ beforeEach(() => {
     cy.visit('/');
 });
 
+const selectorIngredient = '[data-testid="listCard"]';
+const selectorModal = '[data-testid="modal"]';
+
 describe('TEST 1', () => {
 
     it('Добавление ингредиента в конструктор', () => {
@@ -24,7 +28,7 @@ describe('TEST 1', () => {
 
         //Ищем булку
         // Фильтруем элементы по текстовому содержимому
-        cy.contains('[data-testid="listCard"]', 'Краторная булка N-200i')
+        cy.contains(selectorIngredient, 'Краторная булка N-200i')
             // Входим в каждый отфильтрованный элемент
             .within(() => {
                 // Находим и кликаем на кнопку внутри этого элемента
@@ -34,7 +38,7 @@ describe('TEST 1', () => {
             });
 
         //добавляем начинку
-        cy.contains('[data-testid="listCard"]', 'Биокотлета из марсианской Магнолии')
+        cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
             .within(() => {
                 cy.get('button').click();
                 i = i + 1;
@@ -42,7 +46,7 @@ describe('TEST 1', () => {
 
 
         //добавляем начинку
-        cy.contains('[data-testid="listCard"]', 'Биокотлета из марсианской Магнолии')
+        cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
             .within(() => {
                 cy.get('button').click();
                 i = i + 1;
@@ -61,18 +65,18 @@ describe('TEST 1', () => {
 describe('TEST 2', () => {
     beforeEach(() => {
         //Кликаем по ингредиенту
-        cy.contains('[data-testid="listCard"]', 'Краторная булка N-200i').click();
+        cy.contains(selectorIngredient, 'Краторная булка N-200i').click();
     });
 
     it('Открытие модального окна при клике на ингредиенте', () => {
-        cy.get('[data-testid="modal"]').should('exist');
+        cy.get(selectorModal).should('exist');
     });
 
     it('Закрытие модального окна по крестику', () => {
         //ищем крестик и кликаем 
-        cy.get('[data-testid="modal"]').find('svg').click();
+        cy.get(selectorModal).find('svg').click();
         //Проверяем, что модальное окно больше не существует
-        cy.get('[data-testid="modal"]').should('not.exist');
+        cy.get(selectorModal).should('not.exist');
     });
 
     it('Закрытие модального окна по оверлею', () => {
@@ -81,7 +85,7 @@ describe('TEST 2', () => {
         cy.get('[data-testid="modalOverlay"]').click({ force: true });
 
         //Проверяем, что модальное окно больше не существует
-        cy.get('[data-testid="modal"]').should('not.exist');
+        cy.get(selectorModal).should('not.exist');
     });
 
 });
@@ -90,7 +94,7 @@ describe('TEST 3', () => {
     it('Оформляем заказ', () => {
         //Ищем булку
         // Фильтруем элементы по текстовому содержимому
-        cy.contains('[data-testid="listCard"]', 'Краторная булка N-200i')
+        cy.contains(selectorIngredient, 'Краторная булка N-200i')
             // Входим в каждый отфильтрованный элемент
             .within(() => {
                 // Находим и кликаем на кнопку внутри этого элемента
@@ -99,25 +103,31 @@ describe('TEST 3', () => {
             });
 
         //добавляем начинку
-        cy.contains('[data-testid="listCard"]', 'Биокотлета из марсианской Магнолии')
+        cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
             .within(() => {
                 cy.get('button').click();
             });
 
         cy.contains('Оформить заказ').click();
 
-        cy.get('[data-testid="modal"]').should('exist');
+        cy.get(selectorModal).should('exist');
 
         //Ищем номер заказа, проверяем что он соответствует фейковому номеру
         cy.contains('666666').should('have.text', '666666');
 
         //ищем крестик и кликаем 
-        cy.get('[data-testid="modal"]').find('svg').click();
+        cy.get(selectorModal).find('svg').click();
 
         //Проверяем, что модальное окно больше не существует
-        cy.get('[data-testid="modal"]').should('not.exist');
+        cy.get(selectorModal).should('not.exist');
 
         //проверяем что не содержит потомком 
         cy.get('[data-testid="constructorItems"]').should('not.contain', '.constructor-element');
     })
-})
+
+    afterEach(() => {
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
+    })
+    
+});

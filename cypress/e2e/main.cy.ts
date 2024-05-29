@@ -19,50 +19,48 @@ beforeEach(() => {
 
 const selectorIngredient = '[data-testid="listCard"]';
 const selectorModal = '[data-testid="modal"]';
+const selectorItem = '[data-testid="constructorItems"]';
 
-describe('TEST 1', () => {
+it('Добавление ингредиента в конструктор', () => {
+    //счетчик для добавленных ингредиентов
+    let i = 0;
 
-    it('Добавление ингредиента в конструктор', () => {
-        //счетчик для добавленных ингредиентов
-        let i = 0;
+    //Ищем булку
+    // Фильтруем элементы по текстовому содержимому
+    cy.contains(selectorIngredient, 'Краторная булка N-200i')
+        // Входим в каждый отфильтрованный элемент
+        .within(() => {
+            // Находим и кликаем на кнопку внутри этого элемента
+            cy.get('button').click();
 
-        //Ищем булку
-        // Фильтруем элементы по текстовому содержимому
-        cy.contains(selectorIngredient, 'Краторная булка N-200i')
-            // Входим в каждый отфильтрованный элемент
-            .within(() => {
-                // Находим и кликаем на кнопку внутри этого элемента
-                cy.get('button').click();
+            i = i + 1;
+        });
 
-                i = i + 1;
-            });
-
-        //добавляем начинку
-        cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
-            .within(() => {
-                cy.get('button').click();
-                i = i + 1;
-            });
-
-
-        //добавляем начинку
-        cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
-            .within(() => {
-                cy.get('button').click();
-                i = i + 1;
-            });
-
-        // Проверяем количество добавленных ингредиентов
-        cy.get('[data-testid="constructorItems"]').find('.constructor-element').should(($elements) => {
-            // Проверяем, что количество элементов соответствует значению переменной i + 1
-            expect($elements).to.have.length(i + 1);
+    //добавляем начинку
+    cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
+        .within(() => {
+            cy.get('button').click();
+            i = i + 1;
         });
 
 
+    //добавляем начинку
+    cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
+        .within(() => {
+            cy.get('button').click();
+            i = i + 1;
+        });
+
+    // Проверяем количество добавленных ингредиентов
+    cy.get(selectorItem).find('.constructor-element').should(($elements) => {
+        // Проверяем, что количество элементов соответствует значению переменной i + 1
+        expect($elements).to.have.length(i + 1);
     });
+
+
 });
 
-describe('TEST 2', () => {
+describe('Проверка модального окна', () => {
     beforeEach(() => {
         //Кликаем по ингредиенту
         cy.contains(selectorIngredient, 'Краторная булка N-200i').click();
@@ -90,44 +88,52 @@ describe('TEST 2', () => {
 
 });
 
-describe('TEST 3', () => {
-    it('Оформляем заказ', () => {
-        //Ищем булку
-        // Фильтруем элементы по текстовому содержимому
-        cy.contains(selectorIngredient, 'Краторная булка N-200i')
-            // Входим в каждый отфильтрованный элемент
-            .within(() => {
-                // Находим и кликаем на кнопку внутри этого элемента
-                cy.get('button').click();
+it('Оформляем заказ', () => {
+    //Ищем булку
+    // Фильтруем элементы по текстовому содержимому
+    cy.contains(selectorIngredient, 'Краторная булка N-200i')
+        // Входим в каждый отфильтрованный элемент
+        .within(() => {
+            // Находим и кликаем на кнопку внутри этого элемента
+            cy.get('button').click();
 
-            });
+        });
 
-        //добавляем начинку
-        cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
-            .within(() => {
-                cy.get('button').click();
-            });
+    //добавляем начинку
+    cy.contains(selectorIngredient, 'Биокотлета из марсианской Магнолии')
+        .within(() => {
+            cy.get('button').click();
+        });
 
-        cy.contains('Оформить заказ').click();
+    cy.contains('Оформить заказ').click();
 
-        cy.get(selectorModal).should('exist');
+    cy.wait('@postOrder')
+    .its('request.body')
+    .should('deep.equal', {
+      ingredients: [
+        "643d69a5c3f7b9001cfa093c",
+        "643d69a5c3f7b9001cfa0941",
+        "643d69a5c3f7b9001cfa093c"
+    ]
+    });
 
-        //Ищем номер заказа, проверяем что он соответствует фейковому номеру
-        cy.contains('666666').should('have.text', '666666');
 
-        //ищем крестик и кликаем 
-        cy.get(selectorModal).find('svg').click();
+    cy.get(selectorModal).should('exist');
 
-        //Проверяем, что модальное окно больше не существует
-        cy.get(selectorModal).should('not.exist');
+    //Ищем номер заказа, проверяем что он соответствует фейковому номеру
+    cy.contains('666666').should('have.text', '666666');
 
-        //проверяем что не содержит потомком 
-        cy.get('[data-testid="constructorItems"]').should('not.contain', '.constructor-element');
-    })
+    //ищем крестик и кликаем 
+    cy.get(selectorModal).find('svg').click();
 
-    afterEach(() => {
-        deleteCookie('accessToken');
-        localStorage.removeItem('refreshToken');
-    })
-    
+    //Проверяем, что модальное окно больше не существует
+    cy.get(selectorModal).should('not.exist');
+
+    //проверяем что не содержит потомком 
+    cy.get(selectorItem).should('not.contain', '.constructor-element');
+});
+
+afterEach(() => {
+    deleteCookie('accessToken');
+    localStorage.removeItem('refreshToken');
 });

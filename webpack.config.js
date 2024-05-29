@@ -58,7 +58,7 @@ module.exports = {
     }),
     new Dotenv(
       {
-        path: path.resolve(__dirname, '.env.example'),
+        path: path.resolve(__dirname, '.env'),
         // safe: true, // Чтобы предотвратить замену переменных, если они уже определены
       }
 

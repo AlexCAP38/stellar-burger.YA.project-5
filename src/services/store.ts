@@ -14,7 +14,7 @@ import { userSlice } from './reducers/user/slice';
 import { feedSlice } from './reducers/feed/slice';
 
 //Заполнение корневого редьюсера
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   ingredientsSlice: ingredientsSlice.reducer,
   makeBurgerSlice: makeBurgerSlice.reducer,
   userSlice: userSlice.reducer,

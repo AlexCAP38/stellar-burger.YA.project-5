@@ -11,7 +11,7 @@ type TFeed = {
   error?: string | null;
 };
 
-const initialState: TFeed = {
+export const initialState: TFeed = {
   orders: [],
   total: 0,
   totalToday: 0,

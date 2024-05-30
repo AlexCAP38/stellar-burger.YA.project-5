@@ -56,7 +56,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html'
     }),
-    new Dotenv()
+    new Dotenv(
+      {
+        path: path.resolve(__dirname, '.env'),
+        // safe: true, // Чтобы предотвратить замену переменных, если они уже определены
+      }
+
+    )
   ],
   resolve: {
     extensions: [
@@ -85,7 +91,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js'
+    filename: 'index.js'
   },
   devServer: {
     static: path.join(__dirname, './dist'),
